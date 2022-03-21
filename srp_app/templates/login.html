@@ -30,6 +30,28 @@ var rfc5054 = {
     k_base16: "5b9e8ef059c6b32ea59fc1d322d37f04aa30bae5aa9003b8321e21ddb04e300"
 }
 
+function hexToBn(hex) {
+    if (hex.length % 2) {
+      hex = '0' + hex;
+    }
+  
+    var highbyte = parseInt(hex.slice(0, 2), 16)
+    var bn = BigInt('0x' + hex);
+  
+    if (0x80 & highbyte) {
+      // You'd think `bn = ~bn;` would work... but it doesn't
+  
+      // manually perform two's compliment (flip bits, add one)
+      // (because JS binary operators are incorrect for negatives)
+      bn = BigInt('0b' + bn.toString(2).split('').map(function (i) {
+        return '0' === i ? 1 : 0
+      }).join('')) + BigInt(1);
+      bn = -bn;
+    }
+  
+    return bn;
+}
+
 function autenticate(form) {
     var username = document.getElementById('username').value;
     var password = document.getElementById('password').value;
@@ -37,8 +59,8 @@ function autenticate(form) {
     var srp = new SRPClient(username, password, 2048);
 
     var a = srp.srpRandom();
-    var server_a = srp.calculateA(a);
-    console.log(server_a)
+    var A = srp.calculateA(a);
+    console.log(A)
     console.log(username)
     console.log(password)
     document.getElementById('password').value = null;
@@ -48,25 +70,36 @@ function autenticate(form) {
         if (this.readyState == 4 && this.status == 200) {
             const response = JSON.parse(this.responseText);
             const salt = response.salt;
-            const B = response.B;
-            console.log("SALT - >" + salt)
-            console.log("B -> " + B)
-            
-            // here we are using a module generated using "browserify --standalone thinbus" that adds the exported thinbus 
-            // client session factor function onto the window object 
-            //var SRP6JavascriptClientSessionSHA256 = window.thinbus(rfc5054.N_base10, rfc5054.g_base10, rfc5054.k_base16);            
-            //var srpClient = new SRP6JavascriptClientSessionSHA256();
-            //srpClient.step1(username, password);
-            //var credentials = srpClient.step2(salt, B);
-            //credentials['username'] = username;
-            //document.getElementById('credentials').value = JSON.stringify(credentials);
-            //console.log("shared key: "+srpClient.getSessionKey());
-            //form.submit();
+            var B = response.B;
+            var v = response.verifier; // Need to change to object
+            var v1 = srp.calculateV(salt);
+
+            var b1 = srp.srpRandom();
+            var B1 = srp.calculateB(b1,v1);
+            console.log("B1 ->"+ B1);
+            console.log(B1)
+            console.log(JSON.stringify(B1))
+            console.log("B1 Type : " + typeof B1)
+            console.log("END OF B1")
+
+            console.log("SALT - >" + salt);
+            console.log("B ->" + B.trim());
+            console.log(typeof B);
+            B = hexToBn(B)
+            console.log(typeof B);
+
+            console.log(typeof A);
+            console.log(A);
+            console.log(typeof B);
+            var u = srp.calculateU(A, B);
+            var Sc = srp.calculateS(B, salt, u, a);
+            console.log("SC key: "+Sc);
+            form.submit();
         }
     };
     xhttp.open("POST", "/challange", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("username="+username+"&server_a="+server_a);
+    xhttp.send("username="+username+"&server_a="+A);
 }
 
 </script>

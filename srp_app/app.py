@@ -53,9 +53,7 @@ def saveUser():
         else:
             print("DB CONNECTION CLOSED")
             return render_template('register.html')
-    
-    
-        
+
 @app.route('/challange',methods=['POST'])
 def challange():
     if request.form:
@@ -88,7 +86,9 @@ def challange():
                 logging.error ("Auth Failed.")
                 return
             logging.info("\nuname -> {}\nA -> {}".format(str(s.hex()),str(B.hex())))
-            return json.dumps({'salt':str(salt),"B":str(B)}), 200, {'ContentType':'application/json'} 
+
+
+            return json.dumps({'salt':str(salt),'verifier':str(verifier),"B":str(B.hex()).strip()}), 200, {'ContentType':'application/json'} 
 
     else: 
         return json.dumps({'success':"No Request Data"}), 400, {'ContentType':'application/json'} 

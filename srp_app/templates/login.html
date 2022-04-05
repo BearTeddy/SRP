@@ -70,30 +70,19 @@ function autenticate(form) {
         if (this.readyState == 4 && this.status == 200) {
             const response = JSON.parse(this.responseText);
             const salt = response.salt;
-            var B = response.B;
-            var v = response.verifier; // Need to change to object
-            var v1 = srp.calculateV(salt);
-
-            var b1 = srp.srpRandom();
-            var B1 = srp.calculateB(b1,v1);
-            console.log("B1 ->"+ B1);
-            console.log(B1)
-            console.log(JSON.stringify(B1))
-            console.log("B1 Type : " + typeof B1)
-            console.log("END OF B1")
+            var B = new BigInteger(response.B);
 
             console.log("SALT - >" + salt);
-            console.log("B ->" + B.trim());
-            console.log(typeof B);
-            B = hexToBn(B)
-            console.log(typeof B);
+            console.log("B ->" + B);
 
-            console.log(typeof A);
-            console.log(A);
-            console.log(typeof B);
             var u = srp.calculateU(A, B);
             var Sc = srp.calculateS(B, salt, u, a);
             console.log("SC key: "+Sc);
+            Sc = Sc.toString(16)
+            console.log("SC key hex: "+Sc);
+            credentials['Sc'] = Sc;
+
+            document.getElementById('credentials').value = Sc;
             form.submit();
         }
     };

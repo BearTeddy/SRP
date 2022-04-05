@@ -68,6 +68,7 @@ A099ED8193E0757767A13DD52312AB4B03310DCD7F48A9DA04FD50E8083969EDB767B0CF60\
 60279004E57AE6AF874E7303CE53299CCC041C7BC308D82A5698F3A8D0C38271AE35F8E9DB\
 FBB694B5C803D89F7AE435DE236D525F54759B65E372FCD68EF20FA7111F9E4AFF73''',
 "2"),
+
 # 4096
 ('''\
 FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD129024E08\
@@ -253,8 +254,6 @@ def calculate_H_AMK( hash_class, A, M, K ):
     return h.digest()
 
 
-
-
 class Verifier (object):
 
     def __init__(self, username, bytes_s, bytes_v, bytes_A, hash_alg=SHA1, ng_type=NG_2048, n_hex=None, g_hex=None, bytes_b=None):
@@ -323,8 +322,6 @@ class Verifier (object):
         if not self.safety_failed and user_M == self.M:
             self._authenticated = True
             return self.H_AMK
-
-
 
 
 class User (object):

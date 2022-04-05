@@ -95,9 +95,10 @@ def auth():
     if M is None:
         logging.error ("Auth Failed.")
         return
+    logging.info("M ->" + str(M.hex()))
     
     # Client => Server: M
-    # verify_session(user_M)  
+    # verify_session(user_M) 
     # Complete the Verifier side of the authentication process. If the authentication succeded the return result, bytes_H_AMK should be returned to the remote user. On failure, this method returns None.
 
     HAMK     = svr.verify_session( M )

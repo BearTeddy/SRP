@@ -1,0 +1,23 @@
+# Author: Sristi Sravan
+# Date : 12 Jan 2022
+# TIC4302 - NUS - Information Security Practicum II 
+
+Vagrant.configure("2") do |config|
+  config.vm.define "srp" do |cfg|
+    cfg.vm.box = "bento/ubuntu-21.04"
+    cfg.vm.hostname = "srp-vagrant"
+    cfg.vm.provision :shell, path: "tools-install.sh"
+    cfg.vm.network :private_network, ip: "192.168.33.11", gateway: "192.168.33.1", dns: "8.8.8.8"
+    cfg.vm.provider "virtualbox" do |vb, override|
+      vb.gui = false
+      vb.name = "srp-vagrant"
+      vb.customize ["modifyvm", :id, "--memory", 4096]
+      vb.customize ["modifyvm", :id, "--cpus", 2]
+      vb.customize ["modifyvm", :id, "--vram", "32"]
+      vb.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
+      vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+      vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      vb.customize ["setextradata", "global", "GUI/SuppressMessages", "all" ]
+    end
+  end
+end

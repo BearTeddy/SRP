@@ -4,13 +4,12 @@ import logging
 from re import S
 logging.basicConfig(
     format='%(process)d- %(lineno)d - %(levelname)s-%(message)s',level=logging.INFO)
+from srplib import long_to_bytes,bytes_to_long
 import srp
 import urllib.request as ur
 import sqlite3
 
-
-
-from flask import Flask, render_template , request
+from flask import Flask, render_template , request,jsonify
 
 # create the application object
 app = Flask(__name__,
@@ -53,7 +52,7 @@ def saveUser():
         else:
             print("DB CONNECTION CLOSED")
             return render_template('register.html')
-
+svr = None
 @app.route('/challange',methods=['POST'])
 def challange():
     if request.form:
@@ -78,17 +77,35 @@ def challange():
             print("Salt : {}".format(salt))
             print("Verifer : {}".format(verifier))
             
-            svr = srp.Verifier( str(username), bytes(salt,encoding='utf8'), bytes(verifier,encoding='utf8'), bytes(a_hex,encoding='utf8'))
-            s,B = svr.get_challenge()
-            logging.info("\nuname -> {}\nA -> {}".format(str(s.hex()),str(B.hex())))
+            #Calcualte U
             
-            if s is None or B is None:
-                logging.error ("Auth Failed.")
-                return
-            logging.info("\nuname -> {}\nA -> {}".format(str(s.hex()),str(B.hex())))
+            # Calculate SC Server
+            v.modPow(u, this.N).multiply(A).mod(this.N).modPow(B, this.N);
+            
+            # svr = srp.Verifier( str(username), bytes(salt,encoding='utf8'), bytes(verifier,encoding='utf8'), bytes(a_hex,encoding='utf8'))
+            # s,B = svr.get_challenge()
+            # logging.info("\nuname -> {}\nA -> {}".format(str(s.hex()),str(B.hex())))
+            # if s is None or B is None:
+            #     logging.error ("Auth Failed.")
+            #     return
+            
+            # logging.info("K->" + str(int(svr.S)))
+            # logging.info("HAMK ->" + str((svr.H_AMK.hex())))
+            # logging.info("K ->" + str((svr.K.hex())))
+            # # logging.info("M ->" + str(long_to_bytes(svr.M).hex()))
+            # logging.info("\nuname -> {}\nA -> {}".format(str(s.hex()),str(B.hex())))
+            return json.dumps({'salt':str(salt),"B":str(B.hex()).strip()}), 200, {'ContentType':'application/json'} 
+    else: 
+        return json.dumps({'success':"No Request Data"}), 400, {'ContentType':'application/json'} 
 
 
-            return json.dumps({'salt':str(salt),'verifier':str(verifier),"B":str(B.hex()).strip()}), 200, {'ContentType':'application/json'} 
+@app.route('/authenticate',methods=['POST'])
+def auth():
+    if request.form:
+        credential = request.form.get("credentials")
+        logging.info("SC - > "+credential)
+        logging.info(bytes_to_long(bytes(credential,'utf-8')))
+        return json.dumps({'salt':'OK'}), 200, {'ContentType':'application/json'} 
 
     else: 
         return json.dumps({'success':"No Request Data"}), 400, {'ContentType':'application/json'} 
@@ -100,7 +117,18 @@ def chk_conn(conn):
         return True
      except Exception as ex:
         return False
+
+
+# def calculateB():
     
+#     hash_class = _hash_map[ hash_alg ]
+#     k          = H( hash_class, N, g, width=len(long_to_bytes(N)) )
+#     b = srp.get_random_of_length( 32 )
+#     B = (k*self.v + pow(g, self.b, N)) % N
+    
+#     return B;
+    
+
 # start the server with the 'run()' method
 if __name__ == '__main__':
     app.run(debug=True)

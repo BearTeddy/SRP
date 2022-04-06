@@ -27,7 +27,7 @@ jobs:
       - name: Safety
         run: |
          pip install safety
-         safety check -r srp_app/requirements.txt > > logs/safety.log || true
+         safety check -r srp_app/requirements.txt > logs/safety.log || true
       - uses: actions/upload-artifact@v2
         with:
           name: logs

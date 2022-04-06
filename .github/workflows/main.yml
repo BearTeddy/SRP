@@ -15,21 +15,6 @@ jobs:
       - name: Build docker-compose
         run: docker-compose -f docker-compose.yml up --build -d
         
-  secret-scan:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2 
-        
-      - run: |
-          mkdir -p logs/
-          echo 'app/' > logs/exclude.txt
-      
-      
-      - uses: max/secret-scan@master
-        with:
-          exclude_path: 'logs/exclude.txt'
-  
   sca:
     runs-on: ubuntu-latest
 
@@ -37,7 +22,7 @@ jobs:
       - uses: actions/checkout@v2   
       
       - run: |
-          mkdir -p logs/
+          mkdir -p logs
       - name: Safety
         run: |
          pip install safety
@@ -45,7 +30,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: logs
-          path: logs/result.txt   
+          path: logs/safteyresult.txt
           
 
       - name: Pyraider
@@ -56,7 +41,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: logs
-          path: logs/result.json 
+          path: logs/pyraiderresult.json 
   
   test:
     needs: [build, sca]

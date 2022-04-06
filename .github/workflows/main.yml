@@ -8,7 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: ./
     steps:
       - uses: actions/checkout@v2
       
@@ -17,19 +19,27 @@ jobs:
       
         
   sca:
+    needs: build
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2   
-          
+      - uses: actions/checkout@master
+      
+      - name: Install Python
+          uses: actions/setup-python@v1
+          with:
+            python-version: "3.9"
+
+      - name: Check Directory
+          run: ls
+
       - name: Safety
         run: |
          pip install safety
-         safety check -r srp_app/requirements.txt > logs/result.txt
+         safety check -r srp_app/requirements.txt > > logs/safety.log || true
       - uses: actions/upload-artifact@v2
         with:
           name: logs
-          path: logs/safteyresult.txt
+          path: logs/safteyresult.log
           
 
       - name: Pyraider

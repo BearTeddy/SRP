@@ -27,7 +27,7 @@ jobs:
       - name: Safety
         run: |
          pip install safety
-         safety check -r srp_app/requirements.txt > logs/safety.log || true
+         safety check -r srp_app/requirements.txt > logs/safteyresult.log || true
       - uses: actions/upload-artifact@v2
         with:
           name: logs
@@ -37,8 +37,8 @@ jobs:
       - name: Pyraider
         run: |
           pip install pyraider
-          pyraider check -f srp_app/requirements.txt
-          
+          pyraider check -f srp_app/requirements.txt > logs/pyraiderresult.json || true
+
       - uses: actions/upload-artifact@v2
         with:
           name: logs

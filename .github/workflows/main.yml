@@ -8,8 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      options: --user root
+
     steps:
       - uses: actions/checkout@v2
       
@@ -17,7 +16,7 @@ jobs:
         run: docker-compose -f docker-compose.yml up --build -d
       
       - run: |
-          sudo mkdir -p logs
+          mkdir logs
         
   sca:
     runs-on: ubuntu-latest
@@ -26,7 +25,7 @@ jobs:
       - uses: actions/checkout@v2   
 
       - run: |
-          sudo mkdir -p logs
+          mkdir logs
           
       - name: Safety
         run: |
@@ -113,8 +112,6 @@ jobs:
          name: Dockle Report
          path: dockle-report.json
  
-
-  
   deploy:
     needs: [container-scan]
     runs-on: ubuntu-latest

@@ -14,15 +14,19 @@ jobs:
       
       - name: Build docker-compose
         run: docker-compose -f docker-compose.yml up --build -d
+      
+      - run: |
+          sudo mkdir -p logs
         
   sca:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2   
-      
+
       - run: |
-          mkdir -p logs
+          sudo mkdir -p logs
+          
       - name: Safety
         run: |
          pip install safety

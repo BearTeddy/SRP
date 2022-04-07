@@ -25,24 +25,21 @@ jobs:
       - uses: actions/checkout@master
 
       - name: Safety
+        continue-on-error: true
         run: |
          pip install safety
-         safety check -r srp_app/requirements.txt > logs/safteyresult.log || true
-      - uses: actions/upload-artifact@v2
-        with:
-          name: logs
-          path: logs/safteyresult.log
-          
-
+         safety check -r srp_app/requirements.txt > logs/safteyresult.log
+         
       - name: Pyraider
+        continue-on-error: true
         run: |
           pip install pyraider
-          pyraider check -f srp_app/requirements.txt > logs/pyraiderresult.json || true
+          pyraider check -f srp_app/requirements.txt > logs/pyraiderresult.json
 
       - uses: actions/upload-artifact@v2
         with:
           name: logs
-          path: logs/pyraiderresult.json 
+          path: logs/ 
   
   test:
     needs: [build, sca]

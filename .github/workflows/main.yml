@@ -25,7 +25,7 @@ jobs:
       - name: install dependencies
         run: npm ci
       - name: NPM Audit Comment
-        uses: wx-jayesh/actions-npm-audit-comment@v1
+        uses: wx-jayesh/actions-npm-audit-comment@v1.0.0
         with:
           package_json_path: srp_app_nodejs/
           github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -29,7 +29,7 @@ services:
     container_name: srp_app_python
     build: srp_app_nodejs/.
     ports:
-      - 8080:8080
+      - 8080:7070
     networks:
       - project
       

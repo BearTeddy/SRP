@@ -3,7 +3,7 @@ version: '3'
 services:
   srpapp:
     container_name: srp_app
-    build: /srp_app
+    build: srp_app/.
     ports:
       - 5000:5000
     networks:
@@ -11,7 +11,7 @@ services:
 
   srp_app_:
     container_name: srp_app_
-    build: /srp_app_
+    build: srp_app_/.
     ports:
       - 5000:4000
     networks:
@@ -19,7 +19,7 @@ services:
 
   srp_app_nodejs:
     container_name: srp_app_nodejs
-    build: /srp_app_nodejs
+    build: srp_app_nodejs/.
     ports:
       - 8080:8080
     networks:
@@ -27,7 +27,7 @@ services:
 
   srp_app_python:
     container_name: srp_app_python
-    build: /srp_app_nodejs
+    build: srp_app_nodejs/.
     ports:
       - 8080:8080
     networks:

@@ -13,7 +13,7 @@ services:
     container_name: fail_srp_app
     build: srp_app_/.
     ports:
-      - 5000:4000
+      - 4000
     networks:
       - project
 
@@ -21,15 +21,15 @@ services:
     container_name: srp_app_nodejs
     build: srp_app_nodejs/.
     ports:
-      - 8080:8080
+      - 8080
     networks:
       - project
 
   srp_app_python:
     container_name: srp_app_python
-    build: srp_app_nodejs/.
+    build: srp_app_python/.
     ports:
-      - 8080:7070
+      - 1000
     networks:
       - project
       

@@ -9,7 +9,7 @@
         <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet" media="screen">
     </head>
     <body>
-        <h1>SRP Protocol</h1>
+        <h1 class="text-danger">SRP Protocol</h1>
         <p>
         You need to <a href="/register">register using SRP</a> to be able to login. 
         </p>
@@ -17,47 +17,69 @@
             username <input type="text" name="username" id="username"></input><br/>
             password <input type="password" name="password" id="password"></input><br/>
             <input type="hidden" name="credentials" id="credentials"></input>
-            <input type="hidden" name="u" id="u"></input>
-            <input type="hidden" name="k" id="k"></input>
             <button type="button" onclick="autenticate(this.parentElement)">Login</button>
         </form>
         {% if error %}
         <p class="error"><strong>Error:</strong> {{ error }}
         {% endif %}
 <script>
-// RFC 5054 2048bit constants
+
 
 function autenticate(form) {
     var username = document.getElementById('username').value;
     var password = document.getElementById('password').value;
 
-    var srp = new SRPClient(username, password, 2048);
+    var srp = new SRPClient(username, password, 2048,'sha-1');
 
+    // 1. The client generates and stores A
     var a = srp.srpRandom();
     var A = srp.calculateA(a);
+    var data = {
+        "username": username,
+        "A":  A.toString()
+    };
+    //console.log('A -> ',A)
+    //console.log('username: ',username)
+    //console.log('password: ', password)
 
-    document.getElementById('password').value = null;
-    
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             const response = JSON.parse(this.responseText);
-            const salt = response.salt;
-            var B = new BigInteger(response.B);
+            console.log('response :', response)
+            console.log("Hello")
+            // 2.1: Client receives: salt, B, v from server
+            var salt = response.salt;
+            var B = response.B;
+            var v = response.verifier;
+            console.log(salt)
+            console.log(B)
+            console.log(v)
+            var salt = new BigInteger(salt,16);
+            var B = new BigInteger(B,16);
+            var v = new BigInteger(v,16);
+            console.log(salt)
+            console.log(B)
+            console.log(v)
 
-            console.log("SALT - >" + salt);
-            console.log("B ->" + B);
-
+            //3. Server receives A and generates B
+            var b1 = srp.srpRandom();
+            var B = srp.calculateB(b1, v);
+            var u = srp.calculateU(A, B);
             var Sc = srp.calculateS(B, salt, u, a);
-            console.log(Sc)
-            form.submit();
+            var Ss = srp.calculateServerS(A, v, u, b1);
+            var cre = document.getElementById('credentials');
+            cre.value = Sc;
+            console.log("SC key: ===== "+ Sc);
+            console.log("SS key: ===== "+ Ss);
+            
         }
     };
     xhttp.open("POST", "/challange", true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("username="+username+"&server_a="+A,"&random_b="+b );
+    xhttp.setRequestHeader("Accept", "application/json");
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.send(JSON.stringify(data));
 }
-
 </script>
     </body>
 </html>

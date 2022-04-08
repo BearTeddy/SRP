@@ -13,18 +13,27 @@ jobs:
         working-directory: ./
     steps:
       - uses: actions/checkout@v2
-      
       - name: Build docker-compose
         run: docker-compose -f docker-compose.yml up --build -d
       
-        
   sca:
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+       
+      - name: install dependencies
+        run: npm ci
+      - uses: oke-py/npm-audit-action@v2
+        with:
+          audit_level: moderate
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_assignees: oke-py
+          issue_labels: vulnerability,test
+          dedupe_issues: true
+          working_directory : srp_app_nodejs 
 
-      - name: Safety
+      - name: Safety own srpAPP
         run: |
          pip install safety
          safety check -r srp_app/requirements.txt > logs/safteyresult.log || true
@@ -32,7 +41,6 @@ jobs:
         with:
           name: logs
           path: logs/safteyresult.log
-          
 
       - name: Pyraider
         run: |

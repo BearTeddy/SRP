@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+<<<<<<< HEAD
        
       - name: install dependencies
         run: npm ci
@@ -42,15 +43,25 @@ jobs:
           name: logs
           path: logs/safteyresult.log
 
+=======
+
+      - name: Safety
+        continue-on-error: true
+        run: |
+         pip install safety
+         safety check -r srp_app/requirements.txt > logs/safteyresult.log
+         
+>>>>>>> 27b9623b7a3bb8eaab935b811f2b04b177584fcd
       - name: Pyraider
+        continue-on-error: true
         run: |
           pip install pyraider
-          pyraider check -f srp_app/requirements.txt > logs/pyraiderresult.json || true
+          pyraider check -f srp_app/requirements.txt > logs/pyraiderresult.json
 
       - uses: actions/upload-artifact@v2
         with:
           name: logs
-          path: logs/pyraiderresult.json 
+          path: logs/ 
   
   test:
     needs: [build, sca]

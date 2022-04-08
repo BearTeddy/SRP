@@ -31,7 +31,7 @@ jobs:
           issue_assignees: oke-py
           issue_labels: vulnerability,test
           dedupe_issues: true
-          working_directory : srp_app_nodejs 
+          working_directory : ./srp_app_nodejs 
 
       - name: Safety own srpAPP
         run: |

@@ -24,14 +24,11 @@ jobs:
        
       - name: install dependencies
         run: npm ci
-      - uses: oke-py/npm-audit-action@v2
+      - name: NPM Audit Comment
+        uses: wx-jayesh/actions-npm-audit-comment@v1
         with:
-          audit_level: moderate
+          package_json_path: srp_app_nodejs/
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          issue_assignees: oke-py
-          issue_labels: vulnerability,test
-          dedupe_issues: true
-          working_directory : ./srp_app_nodejs 
 
       - name: Safety own srpAPP
         run: |

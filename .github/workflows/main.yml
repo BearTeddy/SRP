@@ -23,6 +23,7 @@ jobs:
       - uses: actions/checkout@master
        
       - name: NPM Audit Comment
+        continue-on-error: true
         uses: wx-jayesh/actions-npm-audit-comment@v1.0.0
         with:
           package_json_path: srp_app_nodejs/

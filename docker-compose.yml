@@ -9,8 +9,8 @@ services:
     networks:
       - project
 
-  srp_app_:
-    container_name: srp_app_
+  srp_app:
+    container_name: fail_srp_app
     build: srp_app_/.
     ports:
       - 5000:4000

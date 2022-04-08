@@ -151,7 +151,7 @@ jobs:
           tags: bearteddy21/4302-project:srp_app_python
 
   container-scan:
-   needs: [test, sast,deploy]
+   needs: [deploy]
    runs-on: ubuntu-latest
  
    steps:

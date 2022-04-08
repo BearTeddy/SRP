@@ -1,8 +1,8 @@
 FROM python:latest
 
-COPY ./directory/requirements.txt /dir/
-COPY ./directory/.env /dir/
+COPY requirements.txt .
+COPY .env .
 RUN pip install -r requirements.txt
-COPY ./directory /dir/
+COPY ./ .
 
 CMD python app.py

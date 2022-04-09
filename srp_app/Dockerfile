@@ -1,10 +1,6 @@
 FROM python:latest
 
-RUN dir
-RUN ls
-COPY requirements.txt /tmp
-COPY .env .
-RUN pip install -r tmp/requirements.txt
 COPY ./ .
+RUN pip install -r tmp/requirements.txt
 
 CMD python app.py

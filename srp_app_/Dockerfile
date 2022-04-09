@@ -1,8 +1,8 @@
 FROM python:latest
 
-COPY /requirements.txt .
-COPY /.env .
+COPY requirements.txt .
+COPY env .
 RUN pip install -r requirements.txt
-COPY / .
+COPY ./ .
 
 CMD python app.py

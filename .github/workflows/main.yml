@@ -129,9 +129,9 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: srp_app_/Dockerfile
+          file: srp_app_fail/Dockerfile
           push: true
-          tags: bearteddy21/4302-project:srp_app_
+          tags: bearteddy21/4302-project:srp_app_fail
 
       - name: Build and push srp_app_nodejs
         uses: docker/build-push-action@v2

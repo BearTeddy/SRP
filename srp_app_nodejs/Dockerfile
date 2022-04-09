@@ -1,6 +1,7 @@
 FROM node:12.18.1
+
 WORKDIR /
-COPY ./srp_app_nodejs .
-RUN cd ./srp_app_nodejs
-RUN npm install
+COPY ["package.json", "package-lock.json*", "./"]
+RUN npm install --production
+COPY . .
 CMD [ "node", "server.js" ]

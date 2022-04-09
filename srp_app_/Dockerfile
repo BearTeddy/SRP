@@ -1,10 +1,7 @@
 FROM python:latest
 
-RUN dir
-RUN ls
-COPY requirements.txt .
-COPY .env .
-RUN pip install -r requirements.txt
-COPY ./ .
+COPY ./srp_app_ .
+RUN ls -la ./srp_app_
+RUN pip install -r srp_app_/requirements.txt
 
-CMD python app.py
+CMD python srp_app_/app.py

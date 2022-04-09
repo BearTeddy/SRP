@@ -163,9 +163,27 @@ jobs:
          password: ${{ secrets.DOCKERHUB_TOKEN }}
             
      - name: Run Dockle
-       uses: erzz/dockle-action@v1.1.1
+       uses: erzz/dockle-action@v1.2.0
        with:
-         image: srp_app_nodejs
+         image: bearteddy21/4302-project:srp_app_python
+         report-format: json
+         report-name: dockle-report
+      - name: Run Dockle
+       uses: erzz/dockle-action@v1.2.0
+       with:
+         image: bearteddy21/4302-project:srp_app_nodejs
+         report-format: json
+         report-name: dockle-report
+      - name: Run Dockle
+       uses: erzz/dockle-action@v1.2.0
+       with:
+         image: bearteddy21/4302-project::srp_app_fail
+         report-format: json
+         report-name: dockle-report
+      - name: Run Dockle
+       uses: erzz/dockle-action@v1.2.0
+       with:
+         image: bearteddy21/4302-project::srpapp
          report-format: json
          report-name: dockle-report
         
@@ -177,7 +195,7 @@ jobs:
          path: dockle-report.json
  
   dast:
-   needs: [deploy]
+   needs: [container-scan]
    runs-on: ubuntu-latest
    steps:
      - name: Checkout

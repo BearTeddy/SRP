@@ -1,7 +1,7 @@
 FROM python:latest
 
 COPY requirements.txt .
-COPY env .
+COPY .env .
 RUN pip install -r requirements.txt
 COPY ./ .
 

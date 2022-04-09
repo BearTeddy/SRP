@@ -1,6 +1,7 @@
 FROM python:latest
 
-COPY ./requirements.txt .
+RUN echo "$PWD"
+COPY requirements.txt /tmp
 RUN pip install -r requirements.txt
 COPY ./ .
 

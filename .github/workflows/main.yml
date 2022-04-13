@@ -220,8 +220,8 @@ jobs:
         fail_action: false     
 
     - name: Report
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: Zaproxy Report
-          path: zapreport.json
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: Zaproxy Report
+        path: zapreport.json

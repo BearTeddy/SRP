@@ -180,14 +180,14 @@ jobs:
       - name: Run Dockle srpfailapp
         uses: erzz/dockle-action@v1.2.0
         with:
-          image: bearteddy21/4302-project::srp_app_fail
+          image: bearteddy21/4302-project:srp_app_fail
           report-format: json
           report-name: dockle-report-srpfail
 
       - name: Run Dockle on srpapp
         uses: erzz/dockle-action@v1.2.0
         with:
-          image: bearteddy21/4302-project::srpapp
+          image: bearteddy21/4302-project:srpapp
           report-format: json
           report-name: dockle-report-ssrpapp
           

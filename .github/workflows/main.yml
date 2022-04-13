@@ -197,10 +197,10 @@ jobs:
         with:
           name: Dockle Report
           path: |
-          dockle-report-srpapppython.json
-          dockle-report-srpnode.json
-          dockle-report-srpfail.json
-          dockle-report-ssrpapp.json
+            dockle-report-srpapppython.json
+            dockle-report-srpnode.json
+            dockle-report-srpfail.json
+            dockle-report-ssrpapp.json
  
   dast:
    needs: [container-scan]

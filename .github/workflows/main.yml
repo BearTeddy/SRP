@@ -206,22 +206,22 @@ jobs:
    needs: [container-scan]
    runs-on: ubuntu-latest
    steps:
-     - name: Checkout
-       uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
     
-     - name: Build Image for testing
-       run: docker-compose -f docker-compose.yml up --build -d
- 
-     - name: ZAP Scan
-       uses: zaproxy/action-baseline@v0.6.1
-       with:
-         target: 'http://localhost:8080'
-         cmd_options: '-a -l WARN -J zapreport.json'
-         fail_action: false     
+    - name: Build Image for testing
+      run: docker-compose -f docker-compose.yml up --build -d
 
-     - name: Report
-         uses: actions/upload-artifact@v2
-         if: always()
-         with:
-           name: Zaproxy Report
-           path: zapreport.json
+    - name: ZAP Scan
+      uses: zaproxy/action-baseline@v0.6.1
+      with:
+        target: 'http://localhost:8080'
+        cmd_options: '-a -l WARN -J zapreport.json'
+        fail_action: false     
+
+    - name: Report
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: Zaproxy Report
+          path: zapreport.json

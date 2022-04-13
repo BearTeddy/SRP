@@ -155,44 +155,54 @@ jobs:
    runs-on: ubuntu-latest
  
    steps:
+     - uses: actions/checkout@v2 
 
+     - run: mkdir -p logs/
+     
      - name: login to Docker
        uses: docker/login-action@v1 
        with:
          username: ${{ secrets.DOCKERHUB_USERNAME }}
          password: ${{ secrets.DOCKERHUB_TOKEN }}
             
-     - name: Run Dockle
+     - name: Run Dockle on srpapppython
        uses: erzz/dockle-action@v1.2.0
        with:
          image: bearteddy21/4302-project:srp_app_python
          report-format: json
-         report-name: dockle-report
-      - name: Run Dockle
+         report-name: dockle-report-srpapppython
+
+      - name: Run Dockle on srpappnodejs
        uses: erzz/dockle-action@v1.2.0
        with:
          image: bearteddy21/4302-project:srp_app_nodejs
          report-format: json
-         report-name: dockle-report
-      - name: Run Dockle
+         report-name: dockle-report-srpnode
+
+      - name: Run Dockle srpfailapp
        uses: erzz/dockle-action@v1.2.0
        with:
          image: bearteddy21/4302-project::srp_app_fail
          report-format: json
-         report-name: dockle-report
-      - name: Run Dockle
+         report-name: dockle-report-srpfail
+
+      - name: Run Dockle on srpapp
        uses: erzz/dockle-action@v1.2.0
        with:
          image: bearteddy21/4302-project::srpapp
          report-format: json
-         report-name: dockle-report
+         report-name: dockle-report-ssrpapp
         
      - name: Upload Report
        uses: actions/upload-artifact@v2
        if: always()
        with:
          name: Dockle Report
-         path: dockle-report.json
+         path: |
+         dockle-report-srpapppython.json
+         dockle-report-srpnode.json
+         dockle-report-srpfail.json
+         dockle-report-ssrpapp.json
  
   dast:
    needs: [container-scan]
@@ -207,7 +217,13 @@ jobs:
      - name: ZAP Scan
        uses: zaproxy/action-baseline@v0.6.1
        with:
-         token: ${{ secrets.GITHUB_TOKEN }}
-         docker_name: 'owasp/zap2docker-stable'
-         target: 'http://localhost:5000'
-         cmd_options: '-a'     
+         target: 'http://localhost:8080'
+         cmd_options: '-a -l WARN -J zapreport.json'
+         fail_action: false     
+
+     - name: Report
+         uses: actions/upload-artifact@v2
+         if: always()
+         with:
+           name: Zaproxy Report
+           path: zapreport.json
